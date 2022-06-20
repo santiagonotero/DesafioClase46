@@ -1,3 +1,13 @@
+// >> Consigna:
+// En base al último proyecto entregable de servidor API RESTful, reformar la capa de routeo 
+// y el controlador para que los requests puedan ser realizados a través del lenguaje de 
+// query GraphQL. 
+// Si tuviésemos un frontend, reformarlo para soportar GraphQL y poder dialogar apropiadamente 
+// con el backend y así realizar las distintas operaciones de pedir, guardar, actualizar y 
+// borrar recursos.
+// Utilizar GraphiQL para realizar la prueba funcional de los querys y las mutaciones.
+
+
 (async()=>{
 let express = require("express");
 let app = express();
@@ -21,6 +31,7 @@ const cluster = require('cluster')
 const compression = require('compression')
 const logger = require("./Logs/winston")
 const numCPUs = require ('os').cpus().length
+const graphql= require('./GraphQL')
 require('dotenv').config({
   path: path.resolve(__dirname, '.env')
 })
@@ -39,6 +50,7 @@ const iniciarMain=()=>{
   
   app.use("/static/", express.static(path.join(__dirname, "public")))
   
+  graphql(app)
   app.use(express.json())
   app.use(express.urlencoded({extended:true}))
 
@@ -109,7 +121,7 @@ const iniciarMain=()=>{
         
       })
       
-      server.listen(PORT, function () {   //antes era args.port
+      server.listen(PORT, function () {
         logger.info(`Servidor corriendo en http://localhost:${PORT}`)
 
       })

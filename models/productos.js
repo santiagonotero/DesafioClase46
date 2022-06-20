@@ -16,7 +16,8 @@ class Productos{
 
     async agregarProducto(obj){
         try{
-            const product = await this.model.create(obj)
+            console.log(obj)
+            const product = await this.model.create(obj.data)
             return product._id.toString()
         }
         catch(err){
@@ -36,9 +37,15 @@ class Productos{
         }
     }
 
-    async cargarProductos(){
+    async cargarProductos(_id = null){
         try{ 
-            const data = await this.model.find().lean()
+            let data 
+            if(_id){
+                data = await this.model.find({_id:_id}).lean()
+            }
+            else{
+                data = await this.model.find().lean()
+            }
             return data
         }
         catch(err){
