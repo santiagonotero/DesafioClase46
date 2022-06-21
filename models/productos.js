@@ -16,7 +16,6 @@ class Productos{
 
     async agregarProducto(obj){
         try{
-            console.log(obj)
             const product = await this.model.create(obj.data)
             return product._id.toString()
         }
@@ -55,9 +54,8 @@ class Productos{
     }
 
     async actualizarProducto(_id, obj){
-        const mongoId = _id
         try{ 
-            if(await this.model.findOneAndUpdate({'_id': mongoId}, obj, {new: true})){
+            if(await this.model.findOneAndUpdate({'_id': _id}, obj, {new: true})){
                 return true
             }
             else{

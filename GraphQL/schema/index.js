@@ -8,16 +8,25 @@ const { buildSchema } = require('graphql')
     foto: String
   }
   input ProductInput {
+    _id:String
     nombre: String
-    _id: String
     precio: Int
     foto: String
+  }
+  type DeletedProduct {
+    acknowledged: Boolean
+    deletedCount: Int
+  }
+  type ChangedProduct {
+    isUpdated: Boolean
   }
   type Query {
     getAllProducts(_id: String): [Product]
   }
   type Mutation {
     createProduct(data: ProductInput): Product
+    deleteProduct(_id: String): DeletedProduct
+    updateProduct(data: ProductInput): ChangedProduct
   }
 `
 
