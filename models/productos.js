@@ -16,7 +16,7 @@ class Productos{
 
     async agregarProducto(obj){
         try{
-            const product = await this.model.create(obj.data)
+            const product = await this.model.create(obj)
             return product._id.toString()
         }
         catch(err){
@@ -49,6 +49,17 @@ class Productos{
         }
         catch(err){
             logger.error('Error cargando producto')
+            console.log(err)
+        }
+    }
+
+    async buscarProducto(id){
+        try{
+            const data = await this.model.findOne({_id: id}).lean()
+            return data
+        }
+        catch(err){
+            logger.error('Error buscando producto')
             console.log(err)
         }
     }

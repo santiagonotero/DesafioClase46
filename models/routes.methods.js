@@ -8,12 +8,13 @@ const modelMensajes= DataModel.getModel('mensajes')
 
 module.exports={
 
-    main: async (req,res)=>{
+    main: async (ctx)=>{
         logger.info('Un usuario accedió al sitio')
         const items = await modelProductos.cargarProductos()
         const mensajes = await modelMensajes.cargarMensajes() 
-        const name = req.user.nombre
-        res.render('index' , { name: name, mensajes: mensajes, items: items})
+        const name = ctx.req.user.nombre
+        ctx.res.render('index' , { name: name, mensajes: mensajes, items: items})
+        ctx.next()
         },
 
     loginGet: (req, res)=>{
@@ -38,6 +39,12 @@ module.exports={
         else{
             res.sendStatus(400)
         }
+    },
+
+    findProduct: async (ctx)=>{
+        const {id} = ctx.params
+        console.log('id: ', id)
+        const dato = await modelProductos.buscarProducto(id) 
     },
 
     loginPost: passport.authenticate("login", {
@@ -79,7 +86,6 @@ module.exports={
     addPost: async (req,res)=>{
         const id = await modelProductos.agregarProducto(req.body)
         res.send({_id: id.toString()})
-        //res.redirect('/')
     },
     
     infoGet: (req,res)=>{

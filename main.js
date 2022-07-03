@@ -1,6 +1,11 @@
 (async()=>{
 let express = require("express");
-let app = express();
+//let app = express();
+const Koa = require('koa')
+const app = new Koa()
+const koaBody = require('koa-body')
+const koaBodyParser = require('koa-bodyparser')
+let hbsKoa = require ('koa-handlebars')
 let server = require("http").Server(app);
 let io = require("socket.io")(server);
 const {engine} = require ("express-handlebars")
@@ -38,11 +43,15 @@ const iniciarMain=()=>{
   
   initializePassport(passport)
   
-  app.use("/static/", express.static(path.join(__dirname, "public")))
+  app.use(koaBody())
+  app.use(koaBodyParser())
+  app.use(homeRouter.routes())
+  //app.use("/static/", express.static(path.join(__dirname, "public")))
   
-  graphql(app)
-  app.use(express.json())
-  app.use(express.urlencoded({extended:true}))
+  //graphql(app)
+  //app.use(graphql)
+  // app.use(express.json())
+  // app.use(express.urlencoded({extended:true}))
 
   app.use(compression())
   
@@ -68,16 +77,21 @@ const iniciarMain=()=>{
     app.use(passport.initialize())
     app.use(passport.session())
 
-
-    app.set('view engine', 'hbs')
+    //app.set('view engine', 'hbs')
       
-    app.engine('hbs',engine({
-      layoutsDir: path.join(__dirname,'/views'),
-      extname: 'hbs',
-      defaultLayout:''
+    // app.engine('hbs',engine({
+    //   layoutsDir: path.join(__dirname,'/views'),
+    //   extname: 'hbs',
+    //   defaultLayout:''
+    // }))
+    app.use(hbsKoa({
+        handlebars: engine({
+        layoutsDir: path.join(__dirname,'/views'),
+        extname: 'hbs',
+        defaultLayout:''
+        })
     }))
-    
-    app.use('/', homeRouter)
+    // console.log ('main.js --> Línea 93')
 
     // iniciamos la conexión del socket
     io.on("connection", async function (socket) {   //Mensaje que indica una conexión. 
@@ -111,10 +125,12 @@ const iniciarMain=()=>{
         
       })
       
-      server.listen(PORT, function () {
-        logger.info(`Servidor corriendo en http://localhost:${PORT}`)
+      //server.listen(PORT, function () {
+      const server = app.listen(PORT, ()=>{
+        logger.info(`Servidor corriendo en http://localhost:${PORT}`)}
+      )
 
-      })
+      server.on('error', (err)=>console.log(err))
     }
     
       

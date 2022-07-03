@@ -1,12 +1,13 @@
 module.exports = {
 
-   auth:(req, res, next) => {
-
+   auth:(ctx) => {
     //(req, res, next) => {
-    if(!req.isAuthenticated()) {
-      return res.redirect("/login")
+
+      console.log('Se está ejecutando auth')
+    if(!ctx.req.isAuthenticated()) {
+      return ctx.res.redirect("/login")
   }
 
-  next()
+  ctx.next()
   }
 }
