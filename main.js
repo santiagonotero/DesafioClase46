@@ -1,6 +1,4 @@
 (async()=>{
-let express = require("express");
-//let app = express();
 const Koa = require('koa')
 const app = new Koa()
 const koaBody = require('koa-body')
@@ -14,7 +12,6 @@ const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
-const Filestore = require('session-file-store')(session)
 const passport = require('passport')
 const flash = require('express-flash')
 const initializePassport = require('./Passport/local')
@@ -46,12 +43,6 @@ const iniciarMain=()=>{
   app.use(koaBody())
   app.use(koaBodyParser())
   app.use(homeRouter.routes())
-  //app.use("/static/", express.static(path.join(__dirname, "public")))
-  
-  //graphql(app)
-  //app.use(graphql)
-  // app.use(express.json())
-  // app.use(express.urlencoded({extended:true}))
 
   app.use(compression())
   
@@ -91,7 +82,6 @@ const iniciarMain=()=>{
         defaultLayout:''
         })
     }))
-    // console.log ('main.js --> Línea 93')
 
     // iniciamos la conexión del socket
     io.on("connection", async function (socket) {   //Mensaje que indica una conexión. 
